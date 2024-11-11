@@ -14,7 +14,7 @@ lerna-debug.log*
 
 # env
 /.env
-
+/sui/*
 # OS
 .DS_Store
 

@@ -3,6 +3,7 @@ import { getModuleFunctions } from './util/contract';
 import { BuildResult, PublishResult } from './schema/contract-schema';
 
 
+const sui = `${__dirname}/../sui/sui`;
 
 export async function publishContract(): Promise<PublishResult> {
   console.log('start to publish contract')
@@ -11,7 +12,7 @@ export async function publishContract(): Promise<PublishResult> {
   try {
     // publish contract by cli command
     const buildResults = execSync(
-      `sui client publish ${contractPath}`,
+      `${sui} client publish ${contractPath}`,
       { encoding: 'utf-8'}
     );
     // get packageId from buildResults string
@@ -56,7 +57,7 @@ export async function buildContract(code: string): Promise<BuildResult> {
   try {
     // build contract by cli command
     const buildResults = execSync(
-      `sui move build --dump-bytecode-as-base64 --path ${contractPath}`,
+      `${sui} move build --dump-bytecode-as-base64 --path ${contractPath}`,
       { encoding: 'utf-8'}
     );
     

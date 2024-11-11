@@ -1,7 +1,7 @@
 {
-  "name": "move-studio-backend",
+  "name": "suistack-backend",
   "version": "1.0.0",
-  "description": "Move Studio IDE backend",
+  "description": "SuiStack",
   "main": "index.js",
   "license": "MIT",
   "dependencies": {

@@ -1,5 +1,8 @@
 import { callGraphql } from "./graphql";
-
+import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
+import { getFullnodeUrl, SuiClient } from '@mysten/sui/client';
+import { Transaction } from '@mysten/sui/transactions';
+import { fromHEX } from '@mysten/sui.js/utils';
 export const parseCode = (code: string, packageId: string) => {
     try {
 
@@ -16,7 +19,6 @@ export const parseCode = (code: string, packageId: string) => {
       if(index !== 0)
         return item.split('(')[1].split(')')[0];
     }).filter(item => item !== undefined);
-
 
     // format function names and arguments
     const compile = function_names.map((item, index) => {
@@ -60,3 +62,41 @@ export const getModuleFunctions =  async (packageId: string) => {
 
     return compile;
   }
+
+
+export async function transfer(recipient: string, amount: number) {
+    // Initialize provider with desired network
+    // Set up the signer with private key
+    if (!process.env.PRIVATE_KEY) {
+        throw new Error("PRIVATE_KEY environment variable is not defined");
+    }
+    const keypair = Ed25519Keypair.fromSecretKey(fromHEX(process.env.PRIVATE_KEY));
+    const rpcUrl = getFullnodeUrl('devnet');
+    // create a client connected to devnet
+    const client = new SuiClient({ url: rpcUrl });
+    // Create and configure the transaction
+    const tx = new Transaction();
+
+    const [coin] = tx.splitCoins(tx.gas, [amount]);
+ 
+    // transfer the split coin to a specific address
+    tx.transferObjects([coin], recipient);
+
+    // Sign and execute the transaction
+    const result = await client.signAndExecuteTransaction({
+      transaction: tx,
+      signer: keypair,
+    });
+     
+    const transaction = await client.waitForTransaction({
+      digest: result.digest,
+      options: {
+        showEffects: true,
+      },
+    });
+    return transaction;
+  }
+
+
+
+  

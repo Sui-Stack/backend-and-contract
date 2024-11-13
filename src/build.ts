@@ -1,6 +1,8 @@
 import { execSync } from 'child_process';
 import { getModuleFunctions } from './util/contract';
 import { BuildResult, PublishResult } from './schema/contract-schema';
+import { ScheduleData } from './schema/schedule';
+import { schedule } from './util/cron';
 
 
 const sui = `${__dirname}/../sui/sui`;
@@ -83,5 +85,14 @@ export async function buildContract(code: string): Promise<BuildResult> {
   }
 }
 
+export async function transferSchedule(data: ScheduleData) {
+  // Call compile function
+  await schedule(data);
+  return {
+    status: true,
+    message: 'schedule successfull',
+    receipt: `Transfer ${data.amount} to ${data.recipient} at ${data.date}`
+  }
+}
 
 

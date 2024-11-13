@@ -1,1 +1,0 @@
-module contract::contract { use std::string::{Self, String}; use sui::url::{Self, Url}; use sui::package; use std::ascii;}

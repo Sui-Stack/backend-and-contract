@@ -96,3 +96,8 @@ export async function transferSchedule(data: ScheduleData) {
 }
 
 
+export  async function smartSwap(recipient: string, amount: number) {
+  // Call compile function
+  // get current price
+}
+

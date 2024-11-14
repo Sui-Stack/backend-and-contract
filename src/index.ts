@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { buildContract, publishContract, transferSchedule } from './build';
 import dotenv from 'dotenv';
+import { getPrice } from './price';
 dotenv.config();
 
 
@@ -12,6 +13,8 @@ app.use(
     origin: "*",
   })
 );
+
+getPrice();
 app.use(express.json({ limit: '10mb' }));
 app.get('/', (_req, res) => {
   res.send('Suistack backend is running!');
@@ -31,6 +34,21 @@ app.post('/build', async (req, res) => {
 
     res.errored
   }
+});
+
+app.post('/smart-swap', async (req, res) => {
+
+  try {
+    // Call compile function
+    const compileResult = await transferSchedule(req.body);
+
+    res.send(compileResult);
+  } catch (error: any) {
+    console.log('error', error)
+
+    res.errored
+  }
+
 });
 
 app.post('/schedule-transfer', async (req, res) => {
